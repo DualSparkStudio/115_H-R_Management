@@ -50,15 +50,6 @@ const PropertyDetailPage = ({ property, onBack }) => {
   const handleBooking = () => {
     if (!checkInDate || !checkOutDate) return;
 
-    const bookingDetails = {
-      property: property.name,
-      checkIn: formatDate(checkInDate),
-      checkOut: formatDate(checkOutDate),
-      guests: numberOfGuests,
-      nights: calculateDays(),
-      total: calculateTotal()
-    };
-
     // Create booking message for WhatsApp or email
     const bookingMessage = `I would like to book ${property.name}%0A%0A` +
       `Check-in: ${formatDate(checkInDate)}%0A` +
