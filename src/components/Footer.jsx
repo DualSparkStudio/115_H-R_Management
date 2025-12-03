@@ -69,6 +69,12 @@ const Footer = () => {
           <p className="footer-copyright">
             © {new Date().getFullYear()} LuxeStay Management. All rights reserved.
           </p>
+          <p className="footer-credit">
+            Designed & Developed by{' '}
+            <a href="https://dualsparkstudio.com" target="_blank" rel="noopener noreferrer" className="credit-link">
+              DualSpark Studio
+            </a>
+          </p>
         </div>
       </div>
     </footer>
