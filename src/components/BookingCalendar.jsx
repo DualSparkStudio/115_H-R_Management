@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isDateBlocked } from '../utils/bookingStorage';
 import './BookingCalendar.css';
 
 const BookingCalendar = ({ checkInDate, checkOutDate, onDateSelect, disabledDates = [] }) => {
@@ -37,7 +38,14 @@ const BookingCalendar = ({ checkInDate, checkOutDate, onDateSelect, disabledDate
     if (date < today) return true;
 
     const dateStr = formatDate(date);
-    return disabledDates.some(d => formatDate(new Date(d)) === dateStr);
+    
+    // Check if date is in disabledDates array
+    if (disabledDates.some(d => formatDate(new Date(d)) === dateStr)) return true;
+    
+    // Check if date is blocked
+    if (isDateBlocked(dateStr)) return true;
+    
+    return false;
   };
 
   const isDateInRange = (date) => {

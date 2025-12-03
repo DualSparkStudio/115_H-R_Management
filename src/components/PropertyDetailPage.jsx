@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getWhatsAppUrl } from '../config/whatsapp';
+import { saveBooking, isDateBlocked } from '../utils/bookingStorage';
 import BookingCalendar from './BookingCalendar';
 import './PropertyDetailPage.css';
 
@@ -47,21 +48,73 @@ const PropertyDetailPage = ({ property, onBack }) => {
     });
   };
 
+  const formatDateForStorage = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleBooking = () => {
     if (!checkInDate || !checkOutDate) return;
 
-    // Create booking message for WhatsApp or email
-    const bookingMessage = `I would like to book ${property.name}%0A%0A` +
-      `Check-in: ${formatDate(checkInDate)}%0A` +
-      `Check-out: ${formatDate(checkOutDate)}%0A` +
-      `Number of Guests: ${numberOfGuests}%0A` +
-      `Number of Nights: ${calculateDays()}%0A` +
-      `Total Amount: ₹${calculateTotal().toLocaleString()}`;
-
-    const whatsappUrl = getWhatsAppUrl(bookingMessage);
+    // Check if any date in range is blocked
+    const checkInStr = formatDateForStorage(checkInDate);
+    const checkOutStr = formatDateForStorage(checkOutDate);
     
-    // Open WhatsApp with booking details
-    window.open(whatsappUrl, '_blank');
+    // Check all dates in range for blocked dates
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+    let hasBlockedDate = false;
+    
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dateStr = formatDateForStorage(d);
+      if (isDateBlocked(dateStr)) {
+        hasBlockedDate = true;
+        break;
+      }
+    }
+
+    if (hasBlockedDate) {
+      alert('Selected dates contain blocked dates. Please choose different dates.');
+      return;
+    }
+
+    // Save booking
+    const booking = {
+      propertyName: property.name,
+      propertyId: property.id,
+      checkIn: checkInStr,
+      checkOut: checkOutStr,
+      guests: numberOfGuests,
+      nights: calculateDays(),
+      total: calculateTotal().toString(),
+      pricePerPerson: pricePerPerson
+    };
+
+    const savedBooking = saveBooking(booking);
+    
+    if (savedBooking) {
+      // Create booking message for WhatsApp or email
+      const bookingMessage = `I would like to book ${property.name}%0A%0A` +
+        `Check-in: ${formatDate(checkInDate)}%0A` +
+        `Check-out: ${formatDate(checkOutDate)}%0A` +
+        `Number of Guests: ${numberOfGuests}%0A` +
+        `Number of Nights: ${calculateDays()}%0A` +
+        `Total Amount: ₹${calculateTotal().toLocaleString()}`;
+
+      const whatsappUrl = getWhatsAppUrl(bookingMessage);
+      
+      // Open WhatsApp with booking details
+      window.open(whatsappUrl, '_blank');
+      
+      // Show success message
+      alert('Booking saved successfully! Opening WhatsApp...');
+    } else {
+      alert('Error saving booking. Please try again.');
+    }
   };
 
   if (!property) return null;

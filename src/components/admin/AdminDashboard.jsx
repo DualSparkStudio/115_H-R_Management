@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import AdminDashboardHome from './AdminDashboardHome';
+import AdminBookings from './AdminBookings';
+import AdminCalendar from './AdminCalendar';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const { data, logout, updateData, updateItem, addItem, deleteItem } = useData();
-  const [activeTab, setActiveTab] = useState('hero');
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
@@ -20,6 +23,25 @@ const AdminDashboard = () => {
           <h2 className="admin-logo">LuxeStay Admin</h2>
         </div>
         <nav className="admin-nav">
+          <button
+            className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            <span>📊</span> Dashboard
+          </button>
+          <button
+            className={`admin-nav-item ${activeTab === 'bookings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bookings')}
+          >
+            <span>📋</span> Bookings
+          </button>
+          <button
+            className={`admin-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+            onClick={() => setActiveTab('calendar')}
+          >
+            <span>📅</span> Calendar
+          </button>
+          <div className="admin-nav-divider"></div>
           <button
             className={`admin-nav-item ${activeTab === 'hero' ? 'active' : ''}`}
             onClick={() => setActiveTab('hero')}
@@ -64,16 +86,27 @@ const AdminDashboard = () => {
       <div className="admin-content">
         <div className="admin-content-header">
           <h1 className="admin-page-title">
+            {activeTab === 'dashboard' && 'Dashboard'}
+            {activeTab === 'bookings' && 'Bookings'}
+            {activeTab === 'calendar' && 'Calendar Management'}
             {activeTab === 'hero' && 'Hero Section'}
             {activeTab === 'services' && 'Services'}
             {activeTab === 'properties' && 'Properties'}
             {activeTab === 'testimonials' && 'Testimonials'}
             {activeTab === 'contact' && 'Contact Information'}
           </h1>
-          <p className="admin-page-subtitle">Manage your website content</p>
+          <p className="admin-page-subtitle">
+            {activeTab === 'dashboard' && 'Overview of your bookings and statistics'}
+            {activeTab === 'bookings' && 'View and manage all bookings'}
+            {activeTab === 'calendar' && 'Block and unblock dates for bookings'}
+            {(activeTab !== 'dashboard' && activeTab !== 'bookings' && activeTab !== 'calendar') && 'Manage your website content'}
+          </p>
         </div>
 
         <div className="admin-content-body">
+          {activeTab === 'dashboard' && <AdminDashboardHome />}
+          {activeTab === 'bookings' && <AdminBookings />}
+          {activeTab === 'calendar' && <AdminCalendar />}
           {activeTab === 'hero' && <HeroEditor data={data.hero} updateData={updateData} />}
           {activeTab === 'services' && (
             <ServicesEditor

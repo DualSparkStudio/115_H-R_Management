@@ -1,0 +1,165 @@
+.admin-bookings-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-bookings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.admin-filter-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--border-color);
+  background: var(--white);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  color: var(--text-dark);
+}
+
+.filter-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.filter-btn.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.admin-bookings-table {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.admin-bookings-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-bookings-table th {
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.admin-bookings-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.admin-bookings-table tbody tr:hover {
+  background: var(--bg-color);
+}
+
+.admin-bookings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.status-select {
+  padding: 6px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.status-select.pending {
+  background: #fff3cd;
+  color: #856404;
+  border-color: #ffc107;
+}
+
+.status-select.confirmed {
+  background: #d4edda;
+  color: #155724;
+  border-color: #28a745;
+}
+
+.status-select.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+  border-color: #dc3545;
+}
+
+.status-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+}
+
+.booking-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.delete-action-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.delete-action-btn:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 1024px) {
+  .admin-bookings-table {
+    font-size: 12px;
+  }
+
+  .admin-bookings-table th,
+  .admin-bookings-table td {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-bookings-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-filter-buttons {
+    justify-content: stretch;
+  }
+
+  .filter-btn {
+    flex: 1;
+  }
+
+  .admin-bookings-table {
+    padding: 16px;
+  }
+}
+
