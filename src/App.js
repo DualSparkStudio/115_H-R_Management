@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Lenis from 'lenis';
@@ -12,10 +12,13 @@ import CTASection from './components/CTASection';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
+import PropertyDetailPage from './components/PropertyDetailPage';
 import Cursor from './components/Cursor';
 import './App.css';
 
 function App() {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
   useEffect(() => {
     // Initialize AOS
     AOS.init({
@@ -62,13 +65,42 @@ function App() {
     };
   }, []);
 
+  const handlePropertySelect = (property) => {
+    setSelectedProperty(property);
+  };
+
+  const handleBackToProperties = () => {
+    setSelectedProperty(null);
+    // Scroll to properties section when going back
+    setTimeout(() => {
+      const propertiesSection = document.getElementById('properties');
+      if (propertiesSection) {
+        propertiesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  // Show property detail page if a property is selected
+  if (selectedProperty) {
+    return (
+      <div className="App">
+        <Cursor />
+        <Navbar />
+        <PropertyDetailPage property={selectedProperty} onBack={handleBackToProperties} />
+        <Footer />
+        <WhatsAppButton />
+      </div>
+    );
+  }
+
+  // Show main page
   return (
     <div className="App">
       <Cursor />
       <Navbar />
       <Hero />
       <Services />
-      <Properties />
+      <Properties onPropertySelect={handlePropertySelect} />
       <Process />
       <Testimonials />
       <CTASection />

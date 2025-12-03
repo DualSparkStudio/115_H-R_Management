@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import PropertyDetail from './PropertyDetail';
 import './Properties.css';
 
-const Properties = () => {
+const Properties = ({ onPropertySelect }) => {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [selectedProperty, setSelectedProperty] = useState(null);
 
   const properties = [
     {
@@ -275,16 +273,13 @@ const Properties = () => {
       : properties.filter((p) => p.category.toLowerCase() === activeFilter.toLowerCase());
 
   const handlePropertyClick = (property) => {
-    setSelectedProperty(property);
-  };
-
-  const handleCloseDetail = () => {
-    setSelectedProperty(null);
+    if (onPropertySelect) {
+      onPropertySelect(property);
+    }
   };
 
   return (
-    <>
-      <section id="properties" className="properties">
+    <section id="properties" className="properties">
         <div className="container">
           <div className="properties-header" data-aos="fade-up">
             <h2 className="section-title">Featured Hotels & Resorts</h2>
@@ -333,10 +328,6 @@ const Properties = () => {
           </div>
         </div>
       </section>
-      {selectedProperty && (
-        <PropertyDetail property={selectedProperty} onClose={handleCloseDetail} />
-      )}
-    </>
   );
 };
 
