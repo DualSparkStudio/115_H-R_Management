@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Lenis from 'lenis';
+import { DataProvider } from './context/DataContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -13,11 +14,31 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import PropertyDetailPage from './components/PropertyDetailPage';
+import AdminPanel from './components/admin/AdminPanel';
 import Cursor from './components/Cursor';
 import './App.css';
 
 function App() {
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showAdmin, setShowAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if user wants to access admin panel
+    const checkAdminAccess = () => {
+      const hash = window.location.hash;
+      const pathname = window.location.pathname;
+      if (hash === '#admin' || pathname === '/admin') {
+        setShowAdmin(true);
+        window.history.replaceState(null, '', window.location.pathname + '#admin');
+      } else {
+        setShowAdmin(false);
+      }
+    };
+
+    checkAdminAccess();
+    window.addEventListener('hashchange', checkAdminAccess);
+    return () => window.removeEventListener('hashchange', checkAdminAccess);
+  }, []);
 
   useEffect(() => {
     // Initialize AOS
@@ -80,34 +101,38 @@ function App() {
     }, 100);
   };
 
-  // Show property detail page if a property is selected
-  if (selectedProperty) {
-    return (
-      <div className="App">
-        <Cursor />
-        <Navbar />
-        <PropertyDetailPage property={selectedProperty} onBack={handleBackToProperties} />
-        <Footer />
-        <WhatsAppButton />
-      </div>
-    );
-  }
-
-  // Show main page
   return (
-    <div className="App">
-      <Cursor />
-      <Navbar />
-      <Hero />
-      <Services />
-      <Properties onPropertySelect={handlePropertySelect} />
-      <Process />
-      <Testimonials />
-      <CTASection />
-      <Contact />
-      <Footer />
-      <WhatsAppButton />
-    </div>
+    <DataProvider>
+      {showAdmin ? (
+        <AdminPanel />
+      ) : (
+        <>
+          {selectedProperty ? (
+            <div className="App">
+              <Cursor />
+              <Navbar />
+              <PropertyDetailPage property={selectedProperty} onBack={handleBackToProperties} />
+              <Footer />
+              <WhatsAppButton />
+            </div>
+          ) : (
+            <div className="App">
+              <Cursor />
+              <Navbar />
+              <Hero />
+              <Services />
+              <Properties onPropertySelect={handlePropertySelect} />
+              <Process />
+              <Testimonials />
+              <CTASection />
+              <Contact />
+              <Footer />
+              <WhatsAppButton />
+            </div>
+          )}
+        </>
+      )}
+    </DataProvider>
   );
 }
 
