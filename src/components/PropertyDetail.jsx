@@ -163,3 +163,4 @@ const PropertyDetail = ({ property, onClose }) => {
 
 export default PropertyDetail;
 
+

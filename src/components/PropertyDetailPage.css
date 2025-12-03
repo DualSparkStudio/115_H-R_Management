@@ -331,6 +331,198 @@
   flex-shrink: 0;
 }
 
+/* Booking Section */
+.property-detail-booking {
+  margin-bottom: 80px;
+}
+
+.booking-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.booking-calendar-wrapper {
+  position: sticky;
+  top: 100px;
+}
+
+.booking-form-wrapper {
+  background: var(--white);
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.booking-date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.booking-date-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.booking-date-input label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.booking-date-input input {
+  padding: 16px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background: var(--bg-color);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.booking-date-input input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+}
+
+.booking-date-input input.has-value {
+  background: var(--white);
+  border-color: var(--accent-color);
+}
+
+.booking-guests {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.booking-guests label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.guests-selector {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-color);
+}
+
+.guests-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-dark);
+  font-family: inherit;
+}
+
+.guests-button:hover {
+  background: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-color);
+}
+
+.guests-count {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  min-width: 40px;
+  text-align: center;
+}
+
+.booking-summary {
+  padding: 24px;
+  background: var(--bg-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.booking-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+.booking-summary-row.total {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  padding-top: 16px;
+  border-top: 2px solid var(--border-color);
+}
+
+.booking-price {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.booking-total {
+  font-size: 24px;
+  color: var(--primary-color);
+}
+
+.booking-summary-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 8px 0;
+}
+
+.booking-button {
+  padding: 18px 32px;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+.booking-button:hover:not(:disabled) {
+  background: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.booking-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* CTA Section */
 .property-detail-cta {
   background: var(--primary-color);
@@ -466,6 +658,23 @@
     padding: 32px 24px;
   }
 
+  .booking-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .booking-calendar-wrapper {
+    position: static;
+  }
+
+  .booking-form-wrapper {
+    padding: 32px 24px;
+  }
+
+  .booking-date-inputs {
+    grid-template-columns: 1fr;
+  }
+
   .property-detail-cta {
     padding: 60px 0;
   }
@@ -489,4 +698,5 @@
     grid-template-columns: 1fr;
   }
 }
+
 

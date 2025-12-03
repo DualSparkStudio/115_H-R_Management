@@ -1,12 +1,77 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getWhatsAppUrl } from '../config/whatsapp';
+import BookingCalendar from './BookingCalendar';
 import './PropertyDetailPage.css';
 
 const PropertyDetailPage = ({ property, onBack }) => {
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const pricePerPerson = 1000; // Rs per person
+
   useEffect(() => {
     // Scroll to top when page loads
     window.scrollTo(0, 0);
   }, []);
+
+  const handleDateSelect = (type, date) => {
+    if (type === 'checkin') {
+      setCheckInDate(date);
+      // If check-out is before new check-in, clear it
+      if (checkOutDate && date >= checkOutDate) {
+        setCheckOutDate(null);
+      }
+    } else {
+      setCheckOutDate(date);
+    }
+  };
+
+  const calculateDays = () => {
+    if (!checkInDate || !checkOutDate) return 0;
+    const diffTime = Math.abs(checkOutDate - checkInDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays || 1;
+  };
+
+  const calculateTotal = () => {
+    const days = calculateDays();
+    return numberOfGuests * pricePerPerson * days;
+  };
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    return date.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  const handleBooking = () => {
+    if (!checkInDate || !checkOutDate) return;
+
+    const bookingDetails = {
+      property: property.name,
+      checkIn: formatDate(checkInDate),
+      checkOut: formatDate(checkOutDate),
+      guests: numberOfGuests,
+      nights: calculateDays(),
+      total: calculateTotal()
+    };
+
+    // Create booking message for WhatsApp or email
+    const bookingMessage = `I would like to book ${property.name}%0A%0A` +
+      `Check-in: ${formatDate(checkInDate)}%0A` +
+      `Check-out: ${formatDate(checkOutDate)}%0A` +
+      `Number of Guests: ${numberOfGuests}%0A` +
+      `Number of Nights: ${calculateDays()}%0A` +
+      `Total Amount: ₹${calculateTotal().toLocaleString()}`;
+
+    const whatsappUrl = getWhatsAppUrl(bookingMessage);
+    
+    // Open WhatsApp with booking details
+    window.open(whatsappUrl, '_blank');
+  };
 
   if (!property) return null;
 
@@ -148,6 +213,103 @@ const PropertyDetailPage = ({ property, onBack }) => {
             </div>
           </section>
 
+          {/* Booking Section */}
+          <section className="property-detail-booking">
+            <h2 className="property-detail-section-title">Book Your Stay</h2>
+            <div className="booking-container">
+              <div className="booking-calendar-wrapper">
+                <BookingCalendar
+                  checkInDate={checkInDate}
+                  checkOutDate={checkOutDate}
+                  onDateSelect={handleDateSelect}
+                />
+              </div>
+              <div className="booking-form-wrapper">
+                <div className="booking-form">
+                  <div className="booking-date-inputs">
+                    <div className="booking-date-input">
+                      <label>Check-in Date</label>
+                      <input
+                        type="text"
+                        value={formatDate(checkInDate)}
+                        placeholder="Select check-in date"
+                        readOnly
+                        className={checkInDate ? 'has-value' : ''}
+                      />
+                    </div>
+                    <div className="booking-date-input">
+                      <label>Check-out Date</label>
+                      <input
+                        type="text"
+                        value={formatDate(checkOutDate)}
+                        placeholder="Select check-out date"
+                        readOnly
+                        className={checkOutDate ? 'has-value' : ''}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="booking-guests">
+                    <label>Number of Guests</label>
+                    <div className="guests-selector">
+                      <button
+                        type="button"
+                        className="guests-button"
+                        onClick={() => setNumberOfGuests(Math.max(1, numberOfGuests - 1))}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <span className="guests-count">{numberOfGuests}</span>
+                      <button
+                        type="button"
+                        className="guests-button"
+                        onClick={() => setNumberOfGuests(numberOfGuests + 1)}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="booking-summary">
+                    <div className="booking-summary-row">
+                      <span>Price per person per night:</span>
+                      <span className="booking-price">₹{pricePerPerson.toLocaleString()}</span>
+                    </div>
+                    {checkInDate && checkOutDate && (
+                      <>
+                        <div className="booking-summary-row">
+                          <span>Number of nights:</span>
+                          <span>{calculateDays()} {calculateDays() === 1 ? 'night' : 'nights'}</span>
+                        </div>
+                        <div className="booking-summary-row">
+                          <span>Number of guests:</span>
+                          <span>{numberOfGuests} {numberOfGuests === 1 ? 'guest' : 'guests'}</span>
+                        </div>
+                        <div className="booking-summary-divider"></div>
+                        <div className="booking-summary-row total">
+                          <span>Total Amount:</span>
+                          <span className="booking-total">₹{calculateTotal().toLocaleString()}</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <button
+                    className="booking-button"
+                    disabled={!checkInDate || !checkOutDate}
+                    onClick={handleBooking}
+                  >
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Call to Action */}
           <section className="property-detail-cta">
             <div className="property-detail-cta-content">
@@ -180,4 +342,5 @@ const PropertyDetailPage = ({ property, onBack }) => {
 };
 
 export default PropertyDetailPage;
+
 
