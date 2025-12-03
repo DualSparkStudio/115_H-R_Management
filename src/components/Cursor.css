@@ -1,0 +1,30 @@
+.cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor.hover {
+  transform: translate(-50%, -50%) scale(1.5);
+  width: 30px;
+  height: 30px;
+  border-color: var(--accent-color);
+}
+
+.cursor.click {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+@media (max-width: 768px) {
+  .cursor {
+    display: none;
+  }
+}
+
