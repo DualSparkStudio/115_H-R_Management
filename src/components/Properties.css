@@ -108,6 +108,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   transform: translateY(20px);
+  pointer-events: none;
 }
 
 .property-card:hover .property-button {
